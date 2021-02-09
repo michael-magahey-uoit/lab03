@@ -1,3 +1,13 @@
+buildscript
+{
+	repositories {
+		flatDir dirs: 'proguard6.2.2/lib'
+	}
+	dependencies {
+		classpath ':proguard'
+	}
+}
+
 plugins {
 	id 'java'
 	id 'application'
@@ -13,4 +23,22 @@ dependencies {
 
 application {
 	mainClassName = 'CSVDemo'
+}
+
+jar
+{
+	manifest
+	{
+		attributes 'Main-Class': 'CSVDemo',
+				   'Implementation-Title': 'CSVDemo',
+				   'Implementation-Version': '1.0'
+	}
+}
+
+task (minify, dependsOn: 'jar', type: proguard.gradle.ProGuardTask)
+{
+	configuration 'proguard.cfg'
+	
+	injars 'build/libs/lab03.jar'
+	outjars 'build/libs/lab03.min.jar'
 }
